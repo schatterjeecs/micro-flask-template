@@ -71,7 +71,8 @@ docker run --rm --net flask-app_elastic --publish 5000:5000 flask-app
 ```commandline
 locust -f performance_test/locustfile.py --csv=performance_test/stats/flask-app
 ```
-**Locust Performance Stats**
+**Locust Performance Stats**: <i>10 Users/10 Spawned/sec</i>
+![Locust Main Page](performance_test/stats/locust_main_page.PNG "Locust Main Page")
 ![Response Time](performance_test/stats/response_times_(ms)_1630150302.png "Response Time")
 ![Total Requests Per Second](performance_test/stats/total_requests_per_second_1630150302.png "Total Requests per second")
 ![Number of Users](performance_test/stats/number_of_users_1630150302.png "Number of Users")
