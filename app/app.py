@@ -1,16 +1,19 @@
 import asyncio
 import os
-import toml
-from elasticsearch import AsyncElasticsearch
-from aioflask import Flask, render_template, request, json
-from werkzeug.exceptions import HTTPException
 from functools import lru_cache
+
 import pandas as pd
+import toml
+from aioflask import Flask, render_template, request, json
+from elasticsearch import AsyncElasticsearch
+from werkzeug.exceptions import HTTPException, BadRequest
+
+from elastic_handler import ElasticHandler
+from models import es_model
+
 
 
 # from asgiref.wsgi import WsgiToAsgi
-
-from elastic_handler import ElasticHandler
 
 # from flask_restplus import Api, Resource, fields
 
@@ -61,6 +64,10 @@ def handle_exception(ex):
     return f"Error occurred: {ex}", 500
 
 
+def handle_exception(ex, er_msg: str):
+    return f"Error: {er_msg}", 400
+
+
 @app.route('/v1/healthcheck')
 def health_check():
     return {
@@ -86,13 +93,18 @@ async def content_search(index_name, page_from, page_size):
 
 @app.post('/v1/content/load/<index_name>')
 async def content_add(index_name):
-    input_data = request.json
+    print(f"request: {request.json}")
+    errors = es_model.EsModel().validate(request.json)
+    print(f"errors: {errors}")
+    if errors:
+        return handle_exception(BadRequest, str(errors))
 
-    resp = await es_handler.store_data(
+    input_data = request.json
+    resp = await es_handler.load_data(
         index=index_name,
         hashtags=input_data['hashtags']
     )
-    return resp
+    return f"Created Ids: {resp}"
 
 
 @app.post('/v1/create/index/<index_name>')

@@ -10,3 +10,5 @@ uvicorn
 aioflask
 pandas
 asyncstdlib
+marshmallow
+deprecated
