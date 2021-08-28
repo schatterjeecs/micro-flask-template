@@ -1,4 +1,6 @@
 import uuid
+import asyncio
+from flask import json
 
 
 class ElasticHandler:
@@ -7,13 +9,14 @@ class ElasticHandler:
         self.es = es
         self.data_lst = data_lst
 
-    async def get_data(self, index, ):
+    async def get_data(self, index, page_from=0, page_size=5):
+        self.logger.info(f"Searching index: {index}")
         body = {"query": {"match_all": {}}}
         return await self.es.search(
             index=index,
             body=body,
-            scroll='2m',
-            size=20
+            from_=page_from,
+            size=page_size
         )
 
     async def create_index_if_not_exists(self, index):
@@ -26,15 +29,24 @@ class ElasticHandler:
     async def delete_index_if_exists(self, index):
         await self.es.indices.delete(index=index, ignore=[400, 404])
 
-    def store_data(self, index, data: str):
-        if data in self.data_lst:
-            self.logger.warn("Content already present")
-            return False
-        else:
-            self.data_lst.append(data)
-            doc = {
-                "content": data
-            }
-            self.es.index(index=index, id=uuid.uuid4(), body=doc)
-            self.logger.info("Inserted new content")
-            return True
+    async def store_data(self, index, hashtags: list):
+        id_list = []
+
+        async def store_each(data: str):
+            unique_id = uuid.uuid4()
+            if data in self.data_lst:
+                self.logger.warn("Content already present")
+                return "False"
+            else:
+                self.data_lst.append(data)
+                doc = {
+                    "content": data
+                }
+                await self.es.index(index=index, id=unique_id, body=doc)
+                self.logger.info(f"Inserted new content with id: {unique_id}")
+                id_list.append(unique_id)
+                return unique_id
+
+        co_routine = [store_each(data) for data in hashtags]
+        await asyncio.gather(*co_routine)
+        return json.dumps(id_list)

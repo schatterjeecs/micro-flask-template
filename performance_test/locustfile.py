@@ -1,8 +1,8 @@
 from locust import HttpUser, task
 
 
-class HelloWorldUser(HttpUser):
+class FlaskAppUser(HttpUser):
     @task
-    def hello_world(self):
-        self.client.get("/")
-        self.client.post("/submit")
+    def flask_app(self):
+        self.client.get("/v1/healthcheck")
+        self.client.get("/v1/content/search/digi_hashtags/2/3")
