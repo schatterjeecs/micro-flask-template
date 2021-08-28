@@ -36,9 +36,11 @@
 
 ### Tech Stack
 - Flask[async]
-- AioFlask
-- Docker
+- AioFlask - it makes async compatible with other async libraries like `AsyncElasticsearch`
 - Elasticsearch[async]
+- Asyncstdlib - facilitates asynchronous functools functionalities
+- Docker
+- Locust
 - HTML5
 - Bootstrap
 ## Getting Started
@@ -46,7 +48,6 @@
 ### Prerequisites
 - Install `docker`
 - Install `python==3.9.6`
-- Install `aioFlask` # it makes async compatible with other async libraries like `AsyncElasticsearch`
 - Install requirements.txt dependent libraries
 ### Usage
 Deployment with `uvicorn` 

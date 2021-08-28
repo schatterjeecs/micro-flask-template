@@ -8,3 +8,5 @@ asgiref~=3.4.1
 gunicorn
 uvicorn
 aioflask
+pandas
+asyncstdlib

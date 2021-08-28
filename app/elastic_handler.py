@@ -1,5 +1,8 @@
-import uuid
 import asyncio
+import uuid
+import pandas as pd
+import asyncstdlib as asyncach
+
 from flask import json
 
 
@@ -50,3 +53,20 @@ class ElasticHandler:
         co_routine = [store_each(data) for data in hashtags]
         await asyncio.gather(*co_routine)
         return json.dumps(id_list)
+
+    @asyncach.lru_cache(maxsize=16)
+    async def get_unique_hashtags(self):
+        body = {
+            "size": 0,
+            "aggs": {
+                "distinct_tags": {
+                    "terms": {
+                        "field": "content.keyword",
+                        "size": 1000
+                    }
+                }
+            }
+        }
+        resp = await self.es.search(index="digi_hashtags", body=body)
+        htags = pd.DataFrame(resp['aggregations']['distinct_tags']['buckets']).get("key").values.tolist()
+        return {"hashtags": htags}
