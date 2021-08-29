@@ -6,8 +6,9 @@ import asyncstdlib as asyncach
 from flask import json
 from deprecated import deprecated
 
+
 class ElasticHandler:
-    def __init__(self, logger, es, data_lst: list):
+    def __init__(self, logger, es, data_lst: list = None):
         self.logger = logger
         self.es = es
         self.data_lst = data_lst
