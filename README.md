@@ -23,6 +23,9 @@
   - [Run The App](#run-the-app)
     - [Using Docker](#using-docker)
   - [Performance Benchmarking](#performance-benchmarking)
+    - [Locust](#locust)
+    - [Apache Bench](#apache-bench)
+    - [JMeter](#jmeter)
   - [Takeaways](#takeaways)
   - [References](#references)
 
@@ -69,6 +72,7 @@ docker run --rm --net flask-app_elastic --publish 5000:5000 flask-app
 ```
 
 ### Performance Benchmarking
+#### Locust
 ```commandline
 locust -f performance_test/locustfile.py --csv=performance_test/stats/flask-app
 ```
@@ -77,6 +81,13 @@ locust -f performance_test/locustfile.py --csv=performance_test/stats/flask-app
 ![Response Time](performance_test/stats/response_times_(ms)_1630150302.png "Response Time")
 ![Total Requests Per Second](performance_test/stats/total_requests_per_second_1630150302.png "Total Requests per second")
 ![Number of Users](performance_test/stats/number_of_users_1630150302.png "Number of Users")
+
+#### Apache Bench
+```commandline
+ab -n 1000 -c 80 http://localhost:5000/v1/content/search/digi_hashtags/2/3
+```
+
+#### JMeter
 
 ### Takeaways
 - Web Server Gateway Interface (WSGI) is incompatible with async globals.
