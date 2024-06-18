@@ -1,9 +1,9 @@
-Flask[async]==2.0.1
+Flask[async]>=2.2.5
 toml~=0.10.1
 locust~=2.1.0
 elasticsearch[async]==7.14.0
 aiohttp
-werkzeug~=2.0.1
+werkzeug>=3.0.3
 asgiref~=3.4.1
 gunicorn
 uvicorn
@@ -12,3 +12,5 @@ pandas
 asyncstdlib
 marshmallow
 deprecated
+multipledispatch
+flask-classful
